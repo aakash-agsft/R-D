@@ -14,7 +14,7 @@ public class RtftopdfApplication {
 
 	public static void main(String[] args) throws IOException, BadLocationException {
 		SpringApplication.run(RtftopdfApplication.class, args);
-		String inputFile = "try.rtf";
+		String inputFile = "original.rtf";
 		Reader rtf = new FileReader(inputFile);
 		JEditorPane p = new JEditorPane();
 		p.setContentType("text/rtf");
@@ -24,7 +24,8 @@ public class RtftopdfApplication {
 			EditorKit kitHtml = p.getEditorKitForContentType("text/html");
 			Writer writer = new StringWriter();
 			kitHtml.write(writer, p.getDocument(), 0, p.getDocument().getLength());
-			HtmlConverter.convertToPdf(writer.toString(), new FileOutputStream("converted-pdf.pdf"));
+			String html = writer.toString().replace("<<","&lt;&lt;").replace(">>","&gt;&gt;");
+			HtmlConverter.convertToPdf(html, new FileOutputStream("converted-pdf.pdf"));
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
